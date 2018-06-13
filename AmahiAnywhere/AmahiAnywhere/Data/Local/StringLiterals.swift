@@ -21,6 +21,9 @@ struct StringLiterals {
     static let ERROR_DOWNLOADING_FILE =         "Error while downloading file"
     static let DOWNLOADING_FILE =               "Downloading %@"
     static let OK =                             "OK"
+    static let SELECT_YOUR_HDA =                "Select your HDA"
+    static let OFFLINE =                        "Offline"
+    static let DOWNLOADED =                     "Downloaded"
 
     static let CURRENT_SIZE =                   "Current size: %@"
     static let AUTO_CONNECTION_LAN =            "Autodetect: (currently LAN)"
