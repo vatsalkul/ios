@@ -69,7 +69,7 @@ extension BaseUITableViewController: BaseView {
 extension UIViewController {
     
     func updateNavigationBarBackground() {
-        var connectionMode = ConnectionMode.local
+        var connectionMode = ConnectionMode.remote
         
         if ConnectionModeManager.shared.isLocalInUse() {
             connectionMode = ConnectionMode.local
