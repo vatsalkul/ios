@@ -9,7 +9,7 @@
 import UIKit
 import Lightbox
 
-class FilesViewController: BaseUIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class FilesViewController: BaseUIViewController {
     
     // Mark - Server properties, will be set from presenting class
     public var directory: ServerFile?
@@ -57,18 +57,27 @@ class FilesViewController: BaseUIViewController, UITableViewDelegate, UITableVie
         return share!.name
     }
     
-    // MARK: - File sorting and searching functionality
-    
-    @IBAction func onSortChange(_ sender: UISegmentedControl) {
-        fileSort = sender.selectedSegmentIndex == 0 ? FileSort.modifiedTime : FileSort.name
-        presenter.reorderFiles(files: serverFiles, sortOrder: fileSort)
+    private func setupDownloadProgressIndicator() {
+        downloadProgressAlertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
+        progressView = UIProgressView(progressViewStyle: .bar)
+        progressView?.setProgress(0.0, animated: true)
+        progressView?.frame = CGRect(x: 10, y: 100, width: 250, height: 2)
+        downloadProgressAlertController?.view.addSubview(progressView!)
+        let height:NSLayoutConstraint = NSLayoutConstraint(item: downloadProgressAlertController!.view, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 120)
+        downloadProgressAlertController?.view.addConstraint(height);
     }
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        presenter.filterFiles(searchText, files: serverFiles, sortOrder: fileSort)
-    }
+    // MARK: - Navigation
     
-    // MARK: - Table view data source
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc: FilesViewController = segue.destination as! FilesViewController
+        vc.share = self.share
+        vc.directory = filteredFiles[(filesTableView.indexPathForSelectedRow?.row)!]
+    }
+}
+
+// Mark - UITableview delegates methods implementations
+extension FilesViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filteredFiles.count
@@ -89,32 +98,27 @@ class FilesViewController: BaseUIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    private func setupDownloadProgressIndicator() {
-        downloadProgressAlertController = UIAlertController(title: "", message: "", preferredStyle: .alert)
-        progressView = UIProgressView(progressViewStyle: .bar)
-        progressView?.setProgress(0.0, animated: true)
-        progressView?.frame = CGRect(x: 10, y: 100, width: 250, height: 2)
-        downloadProgressAlertController?.view.addSubview(progressView!)
-        let height:NSLayoutConstraint = NSLayoutConstraint(item: downloadProgressAlertController!.view, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1, constant: 120)
-        downloadProgressAlertController?.view.addConstraint(height);
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         presenter.handleFileOpening(fileIndex: indexPath.row, files: filteredFiles)
         tableView.deselectRow(at: indexPath, animated: true)
     }
+}
+
+// Mark - UISearchBarDelegate and Sorting Implementations
+
+extension FilesViewController : UISearchBarDelegate {
     
-    // MARK: - Navigation
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        presenter.filterFiles(searchText, files: serverFiles, sortOrder: fileSort)
+    }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc: FilesViewController = segue.destination as! FilesViewController
-        vc.share = self.share
-        vc.directory = filteredFiles[(filesTableView.indexPathForSelectedRow?.row)!]
+    @IBAction func onSortChange(_ sender: UISegmentedControl) {
+        fileSort = sender.selectedSegmentIndex == 0 ? FileSort.modifiedTime : FileSort.name
+        presenter.reorderFiles(files: serverFiles, sortOrder: fileSort)
     }
 }
 
-
-// MARK: File View implementations
+// MARK: Files View implementations
 
 extension FilesViewController: FilesView {
     

@@ -14,7 +14,7 @@ import EVReflection
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    let stack = CoreDataStack(modelName: "OfflineFilesModel")!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -37,8 +37,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dateFormatter.dateFormat = "E, d MMM yyyy HH:mm:ss Z"
         EVReflection.setDateFormatter(dateFormatter)
         
+        preloadData()
         return true
     }
+    
+    // MARK: Preload Data
+    
+    func preloadData() {
+        
+        // Remove previous stuff (if any)
+        do {
+            try stack.dropAllData()
+        } catch {
+            print("Error droping all objects in DB")
+        }
+        
+        for i in 1..<10 {
+            // Create some offline files for test
+            var offlineFile = OfflineFile(name: "",
+                                          share: "Share One",
+                                          mime: "text/plain",
+                                          size: 7 * 1024 * 1024,
+                                          localPath: "",
+                                          fileUri: "",
+                                          downloadId: Int64(Date().timeIntervalSince1970),
+                                          state: 0,
+                                          context: stack.context)
+            offlineFile.name = "Offline File: \(i)"
+        }
+        
+//        print(offlineFile)
+    }
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -61,7 +91,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
-

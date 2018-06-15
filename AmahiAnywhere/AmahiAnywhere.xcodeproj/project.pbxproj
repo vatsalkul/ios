@@ -28,7 +28,6 @@
 		C83C637320386DD90089B9D8 /* BaseContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C637020386DD90089B9D8 /* BaseContract.swift */; };
 		C83C637420386DD90089B9D8 /* BaseUIViewController+BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C637120386DD90089B9D8 /* BaseUIViewController+BaseView.swift */; };
 		C83C637520386DD90089B9D8 /* BaseUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C637220386DD90089B9D8 /* BaseUIViewController.swift */; };
-		C83C637D2038D5150089B9D8 /* StringConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C637A2038D5150089B9D8 /* StringConstants.swift */; };
 		C83C637E2038D5150089B9D8 /* StringIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C637B2038D5150089B9D8 /* StringIdentifiers.swift */; };
 		C83C638F2038D5B30089B9D8 /* LocalStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C63812038D5B30089B9D8 /* LocalStorage.swift */; };
 		C83C63902038D5B30089B9D8 /* PersistenceIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C63822038D5B30089B9D8 /* PersistenceIdentifiers.swift */; };
@@ -40,6 +39,13 @@
 		C83C639F2039B16C0089B9D8 /* ServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C639E2039B16C0089B9D8 /* ServerViewController.swift */; };
 		C8490D1520C847F90052D636 /* VideoPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C8490D1420C847F90052D636 /* VideoPlayer.storyboard */; };
 		C866E5552042D02A0083A606 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C866E5542042D02A0083A606 /* VideoPlayerViewController.swift */; };
+		C86CA91020D3937A00C8EDCA /* OfflineFilesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86CA90F20D3937A00C8EDCA /* OfflineFilesPresenter.swift */; };
+		C86CA91320D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C86CA91120D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodeld */; };
+		C86CA91520D3C65400C8EDCA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86CA91420D3C65400C8EDCA /* CoreDataStack.swift */; };
+		C86CA92920D3D26300C8EDCA /* OfflineFile+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86CA92720D3D26300C8EDCA /* OfflineFile+CoreDataClass.swift */; };
+		C86CA92A20D3D26300C8EDCA /* OfflineFile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86CA92820D3D26300C8EDCA /* OfflineFile+CoreDataProperties.swift */; };
+		C86CA92C20D3D93900C8EDCA /* CoreDataTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86CA92B20D3D93900C8EDCA /* CoreDataTableViewController.swift */; };
+		C86CA92E20D3D99500C8EDCA /* OfflineFilesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86CA92D20D3D99500C8EDCA /* OfflineFilesTableViewController.swift */; };
 		C878C97C205DF4060039C23A /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C878C97B205DF4060039C23A /* UIColor.swift */; };
 		C88E5A7120B543B2006518B6 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88E5A7020B543B1006518B6 /* FileManager.swift */; };
 		C88E5A7620B66B46006518B6 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88E5A7520B66B44006518B6 /* Date.swift */; };
@@ -77,7 +83,6 @@
 		C83C637020386DD90089B9D8 /* BaseContract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseContract.swift; sourceTree = "<group>"; };
 		C83C637120386DD90089B9D8 /* BaseUIViewController+BaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseUIViewController+BaseView.swift"; sourceTree = "<group>"; };
 		C83C637220386DD90089B9D8 /* BaseUIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseUIViewController.swift; sourceTree = "<group>"; };
-		C83C637A2038D5150089B9D8 /* StringConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringConstants.swift; sourceTree = "<group>"; };
 		C83C637B2038D5150089B9D8 /* StringIdentifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringIdentifiers.swift; sourceTree = "<group>"; };
 		C83C63812038D5B30089B9D8 /* LocalStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalStorage.swift; sourceTree = "<group>"; };
 		C83C63822038D5B30089B9D8 /* PersistenceIdentifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceIdentifiers.swift; sourceTree = "<group>"; };
@@ -90,6 +95,13 @@
 		C8490D1420C847F90052D636 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
 		C866E5532042373D0083A606 /* AmahiAnywhere-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AmahiAnywhere-Bridging-Header.h"; sourceTree = "<group>"; };
 		C866E5542042D02A0083A606 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
+		C86CA90F20D3937A00C8EDCA /* OfflineFilesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineFilesPresenter.swift; sourceTree = "<group>"; };
+		C86CA91220D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OfflineFilesModel.xcdatamodel; sourceTree = "<group>"; };
+		C86CA91420D3C65400C8EDCA /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		C86CA92720D3D26300C8EDCA /* OfflineFile+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OfflineFile+CoreDataClass.swift"; sourceTree = "<group>"; };
+		C86CA92820D3D26300C8EDCA /* OfflineFile+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OfflineFile+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		C86CA92B20D3D93900C8EDCA /* CoreDataTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataTableViewController.swift; sourceTree = "<group>"; };
+		C86CA92D20D3D99500C8EDCA /* OfflineFilesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineFilesTableViewController.swift; sourceTree = "<group>"; };
 		C878C97B205DF4060039C23A /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		C88E5A7020B543B1006518B6 /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		C88E5A7520B66B44006518B6 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -141,7 +153,6 @@
 		C83C63782038D5150089B9D8 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				C83C637A2038D5150089B9D8 /* StringConstants.swift */,
 				C83C637B2038D5150089B9D8 /* StringIdentifiers.swift */,
 				46098D092050114C00752EB6 /* Network.swift */,
 				4612851D2051DB770061EC21 /* Mimes.swift */,
@@ -162,6 +173,7 @@
 		C83C63802038D5B30089B9D8 /* Local */ = {
 			isa = PBXGroup;
 			children = (
+				C86CA91620D3C76C00C8EDCA /* Models */,
 				C83C63812038D5B30089B9D8 /* LocalStorage.swift */,
 				C83C63822038D5B30089B9D8 /* PersistenceIdentifiers.swift */,
 				C83C63832038D5B30089B9D8 /* StringLiterals.swift */,
@@ -204,6 +216,7 @@
 		C83C639A2039921B0089B9D8 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				C86CA90A20D30EFC00C8EDCA /* Offline */,
 				C8A7A7EB2075A6FF00A9234E /* Settings */,
 				C8CE05C9206B21C5006F6807 /* MediaPlayers */,
 				C8CE05C8206B21B2006F6807 /* Files */,
@@ -222,6 +235,26 @@
 				C83C639C203992460089B9D8 /* LoginPresenter.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		C86CA90A20D30EFC00C8EDCA /* Offline */ = {
+			isa = PBXGroup;
+			children = (
+				C86CA90F20D3937A00C8EDCA /* OfflineFilesPresenter.swift */,
+				C86CA92B20D3D93900C8EDCA /* CoreDataTableViewController.swift */,
+				C86CA92D20D3D99500C8EDCA /* OfflineFilesTableViewController.swift */,
+			);
+			path = Offline;
+			sourceTree = "<group>";
+		};
+		C86CA91620D3C76C00C8EDCA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C86CA92720D3D26300C8EDCA /* OfflineFile+CoreDataClass.swift */,
+				C86CA92820D3D26300C8EDCA /* OfflineFile+CoreDataProperties.swift */,
+				C86CA91420D3C65400C8EDCA /* CoreDataStack.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		C878C97A205DF3DE0039C23A /* Extensions */ = {
@@ -292,6 +325,7 @@
 		FB71BE8B201CB2FB0005492C = {
 			isa = PBXGroup;
 			children = (
+				C86CA91120D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodeld */,
 				FB71BE96201CB2FC0005492C /* AmahiAnywhere */,
 				FB71BE95201CB2FC0005492C /* Products */,
 				DDF3537D8AE1275A22FED2AA /* Pods */,
@@ -473,6 +507,8 @@
 				C83C63902038D5B30089B9D8 /* PersistenceIdentifiers.swift in Sources */,
 				C83C637520386DD90089B9D8 /* BaseUIViewController.swift in Sources */,
 				FB71BE9A201CB2FC0005492C /* LoginViewController.swift in Sources */,
+				C86CA92C20D3D93900C8EDCA /* CoreDataTableViewController.swift in Sources */,
+				C86CA92920D3D26300C8EDCA /* OfflineFile+CoreDataClass.swift in Sources */,
 				4605964D204F3666004FA066 /* ServerShare.swift in Sources */,
 				FB71BE98201CB2FC0005492C /* AppDelegate.swift in Sources */,
 				4605964B204F35E9004FA066 /* ServerRoute.swift in Sources */,
@@ -482,8 +518,8 @@
 				C88E5A7620B66B46006518B6 /* Date.swift in Sources */,
 				4612851E2051DB770061EC21 /* Mimes.swift in Sources */,
 				46059643204E8B41004FA066 /* BaseUITableViewController.swift in Sources */,
-				C83C637D2038D5150089B9D8 /* StringConstants.swift in Sources */,
 				C88E5A7120B543B2006518B6 /* FileManager.swift in Sources */,
+				C86CA91320D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodeld in Sources */,
 				4605963F204E24DF004FA066 /* ServerPresenter.swift in Sources */,
 				46098D02204FDBEE00752EB6 /* ApiEndPoints.swift in Sources */,
 				C83C63922038D5B30089B9D8 /* AmahiApi.swift in Sources */,
@@ -491,13 +527,17 @@
 				C83C637320386DD90089B9D8 /* BaseContract.swift in Sources */,
 				80F60700206BE1530098BC60 /* SettingsViewController.swift in Sources */,
 				C83C63912038D5B30089B9D8 /* StringLiterals.swift in Sources */,
+				C86CA92E20D3D99500C8EDCA /* OfflineFilesTableViewController.swift in Sources */,
 				C83C639D203992460089B9D8 /* LoginPresenter.swift in Sources */,
 				C878C97C205DF4060039C23A /* UIColor.swift in Sources */,
+				C86CA91520D3C65400C8EDCA /* CoreDataStack.swift in Sources */,
 				80F3FDC7206C0D4D0061CD51 /* ConnectionViewController.swift in Sources */,
 				C83C638F2038D5B30089B9D8 /* LocalStorage.swift in Sources */,
 				C83C637420386DD90089B9D8 /* BaseUIViewController+BaseView.swift in Sources */,
+				C86CA91020D3937A00C8EDCA /* OfflineFilesPresenter.swift in Sources */,
 				C83C637E2038D5150089B9D8 /* StringIdentifiers.swift in Sources */,
 				46F87397204CC69500F1AF37 /* Server.swift in Sources */,
+				C86CA92A20D3D26300C8EDCA /* OfflineFile+CoreDataProperties.swift in Sources */,
 				46098D08204FFFBE00752EB6 /* ServerApi.swift in Sources */,
 				C8D86160209490230014D8AC /* WebViewController.swift in Sources */,
 				C83C63992038D5B30089B9D8 /* AuthResponses.swift in Sources */,
@@ -706,6 +746,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C86CA91120D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C86CA91220D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodel */,
+			);
+			currentVersion = C86CA91220D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodel */;
+			path = OfflineFilesModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = FB71BE8C201CB2FB0005492C /* Project object */;
 }

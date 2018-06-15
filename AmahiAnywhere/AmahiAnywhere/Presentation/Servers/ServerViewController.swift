@@ -74,8 +74,14 @@ extension ServerViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             ServerApi.initialize(server: servers[indexPath.row])
-        } else {
             
+            let sharedVc = viewController(viewControllerClass: SharesTableViewController.self,
+                                          from: StoryBoardIdentifiers.MAIN)
+            navigationController?.pushViewController(sharedVc, animated: true)
+        } else {
+            let offlineFileVc = viewController(viewControllerClass: OfflineFilesTableViewController.self,
+                                          from: StoryBoardIdentifiers.MAIN)
+            navigationController?.pushViewController(offlineFileVc, animated: true)
         }
     }
 
