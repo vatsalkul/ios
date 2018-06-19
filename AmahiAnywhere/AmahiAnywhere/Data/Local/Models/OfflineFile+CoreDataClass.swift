@@ -10,19 +10,18 @@
 import Foundation
 import CoreData
 
-
 public class OfflineFile: NSManagedObject {
 
     // MARK: Initializer
     
     convenience init(name: String,
-                     share: String,
                      mime: String,
                      size: Int64,
-                     localPath: String,
+                     mtime: Date,
                      fileUri: String,
-                     downloadId: Int64,
-                     state: Int16,
+                     localPath: String,
+                     progress: Float,
+                     state: OfflineFileState,
                      context: NSManagedObjectContext) {
         
         // An EntityDescription is an object that has access to all
@@ -31,22 +30,33 @@ public class OfflineFile: NSManagedObject {
         if let ent = NSEntityDescription.entity(forEntityName: "OfflineFile", in: context) {
             self.init(entity: ent, insertInto: context)
             
+            debugPrint("Remote File URL Passed is \(fileUri)")
+            
             self.name = name
-            self.share = share
             self.mime = mime
             self.size = size
-            self.localPath = localPath
+            self.mtime = mtime
             self.remoteFileUri = fileUri
-            self.downloadId = downloadId
+            self.localPath = localPath
+            self.progress = progress
             self.downloadDate = Date()
-            self.state = state
+            self.stateEnum = state
         } else {
             fatalError("Unable to find Entity name!")
         }
     }
     
+    var stateEnum: OfflineFileState {                   //  ↓ If self.state is invalid.
+        get { return OfflineFileState(rawValue: self.state) ?? .none }
+        set { self.state = newValue.rawValue }
+    }
+    
     public func getFileSize() -> String {
         return ByteCountFormatter().string(fromByteCount: size)
+    }
+    
+    public func remoteFileURL() -> URL {
+        return URL(string: remoteFileUri!)!
     }
 }
 

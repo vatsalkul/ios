@@ -23,11 +23,17 @@ struct StringLiterals {
     static let OK =                             "OK"
     static let SELECT_YOUR_HDA =                "Select your HDA"
     static let OFFLINE =                        "Offline"
-    static let DOWNLOADED =                     "Downloaded"
+    static let DOWNLOADS =                      "Downloads"
+    static let SHARE =                          "Share"
+    static let DOWNLOAD =                       "Download"
+    static let DELETE =                         "Delete"
+    static let AVAILABLE_OFFLINE =              "Available Offline"
+    static let REMOVE_OFFLINE =                 "Make unavailable Offline"
+    static let STOP_DOWNLOAD =                  "Stop Download"
 
     static let CURRENT_SIZE =                   "Current size: %@"
-    static let AUTO_CONNECTION_LAN =            "Autodetect: (currently LAN)"
-    static let AUTO_CONNECTION_REMOTE =         "Autodetect: (currently Remote)"
+    static let AUTO_CONNECTION_LAN =            "Autodetect (currently LAN)"
+    static let AUTO_CONNECTION_REMOTE =         "Autodetect (currently Remote)"
 
     // In Setting Area
     static let FEEDBACK_RECEPIENT =             "support@amahi.org"
@@ -54,9 +60,6 @@ struct StringLiterals {
     static let SENT_TITLE =                     "Sent"
     static let SENT_MESSAGE =                   "Mail Sent"
     
-    // In Delegates Method
-    
-    static let ABOUT_TITLE =                    "Version"
     static let INFO_DICTIONARY_KEY =            "CFBundleShortVersionString"
     
     // App_id

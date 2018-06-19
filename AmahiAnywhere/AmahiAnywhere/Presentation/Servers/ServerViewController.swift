@@ -64,7 +64,7 @@ extension ServerViewController {
             cell.textLabel?.isEnabled = server.active
             cell.accessoryType = server.active ? .disclosureIndicator : .none
         } else {
-            cell.textLabel?.text = StringLiterals.DOWNLOADED
+            cell.textLabel?.text = StringLiterals.DOWNLOADS
             cell.accessoryType = .none
         }
         

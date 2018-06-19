@@ -8,8 +8,9 @@
 
 import Foundation
 import Lightbox
+import CoreData
 
-protocol FilesView : BaseView {
+internal protocol FilesView : BaseView {
     func initFiles(_ files: [ServerFile])
     
     func updateFiles(_ files: [ServerFile])
@@ -29,9 +30,10 @@ protocol FilesView : BaseView {
     func dismissProgressIndicator(at url: URL, completion: @escaping () -> Void)
 }
 
-class FilesPresenter: BasePresenter {
+internal class FilesPresenter: BasePresenter {
     
     weak private var view: FilesView?
+    lazy private var offlineFiles : [String: OfflineFile] = self.loadOfflineFiles()
     
     init(_ view: FilesView) {
         self.view = view
@@ -105,14 +107,15 @@ class FilesPresenter: BasePresenter {
             return
             
         case MimeType.code, MimeType.presentation, MimeType.sharedFile, MimeType.document, MimeType.spreadsheet:
-            if fileExists(fileName: file.getPath()) {
+            if FileManager.default.fileExistsInCache(file){
+                let path = FileManager.default.localPathInCache(for: file)
                 if type == MimeType.sharedFile {
-                    self.view?.shareFile(at: localPath(for: file))
+                    self.view?.shareFile(at: path)
                 } else {
-                    self.view?.webViewOpenContent(at: localPath(for: file), mimeType: type)
+                    self.view?.webViewOpenContent(at: path, mimeType: type)
                 }
             } else {
-                downloadAndOpenFile(fileIndex: fileIndex, serverFile: file, mimeType: type)
+                downloadAndOpenFile(at: fileIndex, file, mimeType: type)
             }
             break
             
@@ -122,13 +125,32 @@ class FilesPresenter: BasePresenter {
         }
     }
     
-    private func downloadAndOpenFile(fileIndex: Int , serverFile: ServerFile, mimeType: MimeType) {
+    public func makeFileAvailableOffline(_ serverFile: ServerFile) {
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        
+        let offlineFile = OfflineFile(name: serverFile.getNameOnly(),
+                                      mime: serverFile.mime_type!,
+                                      size: serverFile.size!,
+                                      mtime: serverFile.mtime!,
+                                      fileUri: ServerApi.shared!.getFileUri(serverFile).absoluteString,
+                                      localPath: serverFile.getPath(),
+                                      progress: 1,
+                                      state: OfflineFileState.downloading,
+                                      context: stack.context)
+        
+        DownloadService.shared.startDownload(offlineFile)
+    }
+    
+    private func downloadAndOpenFile(at fileIndex: Int ,_ serverFile: ServerFile, mimeType: MimeType) {
         
         self.view?.updateDownloadProgress(for: fileIndex, downloadJustStarted: true, progress: 0.0)
         
         // cleanup temp files in background
         DispatchQueue.global(qos: .background).async {
-            FileManager.default.cleanUpFilesInCache(folderName: "cache")
+            FileManager.default.cleanUpFiles(in: FileManager.default.temporaryDirectory,
+                                             folderName: "cache")
         }
         
         Network.shared.downloadFileToStorage(file: serverFile, progressCompletion: { progress in
@@ -140,7 +162,7 @@ class FilesPresenter: BasePresenter {
                 return
             }
             
-            let filePath = self.localPath(for: serverFile)
+            let filePath = FileManager.default.localPathInCache(for: serverFile)
             
             self.view?.dismissProgressIndicator(at: filePath, completion: {
                 
@@ -153,30 +175,6 @@ class FilesPresenter: BasePresenter {
         })
     }
     
-    private func localPath(for file: ServerFile) -> URL {
-        
-        let fileManager = FileManager.default
-        let tempDirectory = fileManager.temporaryDirectory
-        let cacheFolderPath = tempDirectory.appendingPathComponent("cache")
-        
-        return cacheFolderPath.appendingPathComponent(file.getPath())
-    }
-    
-    private func fileExists(fileName: String) -> Bool {
-        
-        let fileManager = FileManager.default
-        let tempDirectory = fileManager.temporaryDirectory
-        let cacheFolderPath = tempDirectory.appendingPathComponent("cache")
-        
-        let pathComponent = cacheFolderPath.appendingPathComponent(fileName)
-        let filePath = pathComponent.path
-        if fileManager.fileExists(atPath: filePath) {
-            return true
-        } else {
-            return false
-        }
-    }
-    
     private func prepareImageArray(_ files: [ServerFile]) -> [LightboxImage] {
         var images: [LightboxImage] = [LightboxImage] ()
         for file in files {
@@ -185,5 +183,38 @@ class FilesPresenter: BasePresenter {
             }
         }
         return images
+    }
+    
+    private func loadOfflineFiles() ->  [String : OfflineFile] {
+        
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "OfflineFile")
+        
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        let offlineFiles : [OfflineFile] = fetchedResultsController.fetchedObjects as! [OfflineFile]
+     
+        var dictionary = [String : OfflineFile]()
+            
+        for file in offlineFiles {
+            dictionary[file.name!] = file
+        }
+        
+        return dictionary
+    }
+    
+    func checkFileOfflineState(_ file: ServerFile) -> OfflineFileState {
+        
+        if let offlineFile = offlineFiles[file.name!] {
+            
+            if file.mtime! != offlineFile.mtime! || file.size! != offlineFile.size {
+                return .outdated
+            }
+            
+            return offlineFile.stateEnum
+        } else {
+            return .none
+        }
     }
 }

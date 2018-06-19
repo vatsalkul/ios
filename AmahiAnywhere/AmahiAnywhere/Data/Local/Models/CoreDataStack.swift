@@ -7,8 +7,6 @@
 //
 
 import Foundation
-
-
 import CoreData
 
 // MARK: - CoreDataStack
@@ -29,14 +27,14 @@ struct CoreDataStack {
         
         // Assumes the model is in the main bundle
         guard let modelURL = Bundle.main.url(forResource: modelName, withExtension: "momd") else {
-            print("Unable to find \(modelName)in the main bundle")
+            debugPrint("Unable to find \(modelName)in the main bundle")
             return nil
         }
         self.modelURL = modelURL
         
         // Try to create the model from the URL
         guard let model = NSManagedObjectModel(contentsOf: modelURL) else {
-            print("unable to create a model from \(modelURL)")
+            debugPrint("unable to create a model from \(modelURL)")
             return nil
         }
         self.model = model
@@ -52,7 +50,7 @@ struct CoreDataStack {
         let fm = FileManager.default
         
         guard let docUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            print("Unable to reach the documents folder")
+            debugPrint("Unable to reach the documents folder")
             return nil
         }
         
@@ -64,7 +62,7 @@ struct CoreDataStack {
         do {
             try addStoreCoordinator(NSSQLiteStoreType, configuration: nil, storeURL: dbURL, options: options as [NSObject : AnyObject]?)
         } catch {
-            print("unable to add store at \(dbURL)")
+            debugPrint("unable to add store at \(dbURL)")
         }
     }
     
@@ -102,9 +100,9 @@ extension CoreDataStack {
         if delayInSeconds > 0 {
             do {
                 try saveContext()
-                print("Autosaving")
-            } catch {
-                print("Error while autosaving")
+                debugPrint("Autosaving only if new changes exist")
+            } catch let error as NSError {
+                debugPrint("Error while autosaving  \(error.localizedDescription)")
             }
             
             let delayInNanoSeconds = UInt64(delayInSeconds) * NSEC_PER_SEC

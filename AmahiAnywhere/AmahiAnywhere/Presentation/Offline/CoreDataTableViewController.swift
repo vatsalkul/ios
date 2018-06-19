@@ -14,7 +14,7 @@ import CoreData
 
 // MARK: - CoreDataTableViewController: UITableViewController
 
-class CoreDataTableViewController: UITableViewController {
+class CoreDataTableViewController: BaseUITableViewController {
     
     // MARK: Properties
     

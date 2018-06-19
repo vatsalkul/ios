@@ -79,7 +79,8 @@ public class Network {
         // Create destination URL
         let destination: DownloadRequest.DownloadFileDestination = { _, _ in
             
-            let tempDirectoryURL = FileManager.default.createFolderInTemp(folderName: "cache")
+            let tempDirectoryURL = FileManager.default.findOrCreateFolder(in: FileManager.default.temporaryDirectory,
+                                                                    folderName: "cache")
 
             let destinationFileUrl = tempDirectoryURL?.appendingPathComponent(file.getPath())
             
