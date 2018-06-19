@@ -59,8 +59,3 @@ public class OfflineFile: NSManagedObject {
         return URL(string: remoteFileUri!)!
     }
 }
-
-extension OfflineFile {
-    static let nameSorter: (OfflineFile, OfflineFile) -> Bool = { $0.name!.localizedCaseInsensitiveCompare($1.name!) == ComparisonResult.orderedAscending }
-    static let downloadDateSorter: (OfflineFile, OfflineFile) -> Bool = { $0.downloadDate! > $1.downloadDate! }
-}

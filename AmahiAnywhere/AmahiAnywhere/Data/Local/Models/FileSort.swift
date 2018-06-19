@@ -1,5 +1,5 @@
 //
-//  OfflineFileSort.swift
+//  FileSort.swift
 //  AmahiAnywhere
 //
 //  Created by codedentwickler on 6/17/18.

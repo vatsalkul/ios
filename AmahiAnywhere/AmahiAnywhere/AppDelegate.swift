@@ -90,7 +90,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    // Mark - Only for debug purposes
+    // Mark - Only for debug
     func removeAllDataFromDownloadsAndCoreData() {
         // Remove previous stuff (if any)
         do {
