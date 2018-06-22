@@ -64,16 +64,43 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
                     debugPrint("File was deleted from Downloads")
                 }!
                 
+                let open = self.creatAlertAction(StringLiterals.OPEN, style: .default) { (action) in
+                    let offlineFiles : [OfflineFile] = self.fetchedResultsController?.fetchedObjects as! [OfflineFile]
+                    self.presenter.handleOfflineFile(fileIndex: indexPath.row, files: offlineFiles)
+                }!
+                
                 let share = self.creatAlertAction(StringLiterals.SHARE, style: .default) { (action) in
                     guard let url = FileManager.default.localFilePathInDownloads(for: offlineFile) else { return }
                     self.shareFile(at: url)
                 }!
                 
+                let stop = self.creatAlertAction(StringLiterals.STOP_DOWNLOAD, style: .default) { (action) in
+                    offlineFile.stateEnum = .stopped
+                    DownloadService.shared.pauseDownload(offlineFile)
+                }!
+                
+                var actions = [UIAlertAction]()
+                
+                let state = offlineFile.stateEnum
+                if state == .downloaded {
+                    if Mimes.shared.match(offlineFile.mime!) != .sharedFile {
+                        actions.append(open)
+                    }
+                    actions.append(delete)
+                    actions.append(share)
+                } else if state == .stopped {
+                    actions.append(delete)
+                } else if state == .downloading {
+                    actions.append(stop)
+                    actions.append(delete)
+                }
+                
                 let cancel = self.creatAlertAction(StringLiterals.CANCEL, style: .cancel, clicked: nil)!
+                actions.append(cancel)
                 
                 self.createActionSheet(title: "",
                                        message: StringLiterals.CHOOSE_ONE,
-                                       ltrActions: [delete, share, cancel],
+                                       ltrActions: actions,
                                        preferredActionPosition: 0)
             }
         }
