@@ -29,9 +29,6 @@ public class OfflineFile: NSManagedObject {
         // you need it to create an instance of this class.
         if let ent = NSEntityDescription.entity(forEntityName: "OfflineFile", in: context) {
             self.init(entity: ent, insertInto: context)
-            
-            debugPrint("Remote File URL Passed is \(fileUri)")
-            
             self.name = name
             self.mime = mime
             self.size = size

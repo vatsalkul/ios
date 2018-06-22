@@ -115,9 +115,8 @@ extension FileManager {
         // Get local file path: download task stores tune here
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let downloadFolderPath = FileManager.default.findOrCreateFolder(in: documentsPath, folderName: "downloads")
-        let finalPath = offlineFile.localPath!.replacingOccurrences(of: "/", with: "-")
         
-        return downloadFolderPath?.appendingPathComponent(finalPath)
+        return downloadFolderPath?.appendingPathComponent(offlineFile.localPath!)
     }
     
     func localPathInCache(for file: ServerFile) -> URL {

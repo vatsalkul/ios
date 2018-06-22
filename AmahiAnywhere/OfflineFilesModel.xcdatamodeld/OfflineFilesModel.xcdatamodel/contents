@@ -10,6 +10,11 @@
         <attribute name="remoteFileUri" attributeType="String" syncable="YES"/>
         <attribute name="size" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" spotlightIndexingEnabled="YES" syncable="YES"/>
         <attribute name="state" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="localPath"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <elements>
         <element name="OfflineFile" positionX="-1206" positionY="-729" width="128" height="180"/>

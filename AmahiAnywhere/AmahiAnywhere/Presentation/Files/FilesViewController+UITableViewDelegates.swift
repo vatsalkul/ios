@@ -43,8 +43,8 @@ extension FilesViewController : UITableViewDelegate, UITableViewDataSource {
         
         let availableOffline = UITableViewRowAction(style: .destructive, title: StringLiterals.AVAILABLE_OFFLINE) { (action, indexPath) in
         }
-        
-        if presenter.checkFileOfflineState(file) == .downloaded {
+        let state = presenter.checkFileOfflineState(file)
+        if state  == .downloaded || state == .downloading {
             return [availableOffline]
         }
         

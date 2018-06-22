@@ -123,7 +123,7 @@ extension UIViewController {
         self.present(alertController, animated: true, completion: nil);
     }
     
-    func createActionSheet(title: String! = "" , message: String! = "Select one" , ltrActions: [UIAlertAction]! = [] ,
+    func createActionSheet(title: String! = "", message: String! = StringLiterals.CHOOSE_ONE, ltrActions: [UIAlertAction]! = [] ,
                            preferredActionPosition: Int = 0 ){
         let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet);
         

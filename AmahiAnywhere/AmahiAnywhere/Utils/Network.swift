@@ -37,6 +37,9 @@ public class Network {
         
         Alamofire.request(url, method: method, parameters: parameters, headers: getFinalHeaders(headers))
             .responseObject {(response: DataResponse<T>) in
+                
+                debugPrint("Request to \(url!) returned with STATUS CODE \(response.response?.statusCode)") // <<<<<<<<<<<<<
+                
                 switch response.result {
                     case .success:
                         if let data = response.result.value {

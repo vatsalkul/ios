@@ -28,8 +28,9 @@ extension OfflineFilesTableViewController {
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
-            let offlineFile = self.fetchedResultsController!.object(at: indexPath) as! OfflineFile
+        let offlineFile = self.fetchedResultsController!.object(at: indexPath) as! OfflineFile
+        
+        let delete = UITableViewRowAction(style: .destructive, title: StringLiterals.DELETE) { (action, indexPath) in
             
             // Delete file in downloads directory
             let fileManager = FileManager.default
@@ -49,8 +50,7 @@ extension OfflineFilesTableViewController {
         }
         delete.backgroundColor = UIColor.red
         
-        let share = UITableViewRowAction(style: .normal, title: "Share") { (action, indexPath) in
-            let offlineFile = self.fetchedResultsController!.object(at: indexPath) as! OfflineFile
+        let share = UITableViewRowAction(style: .normal, title: StringLiterals.SHARE) { (action, indexPath) in
             
             guard let url = FileManager.default.localFilePathInDownloads(for: offlineFile) else { return }
             self.shareFile(at: url)

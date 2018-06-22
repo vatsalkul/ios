@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        removeAllDataFromDownloadsAndCoreData()
         
         // The Load some offline files. Only used for debug
-        // preloadData()
+//         preloadData()
         
         // Start Autosaving, tries to do autosave every 5 minutes if any changes is waiting to be persisted.
         stack.autoSave(60 * 5)

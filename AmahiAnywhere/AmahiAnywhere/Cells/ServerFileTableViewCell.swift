@@ -8,8 +8,6 @@
 
 import Foundation
 
-// MARK: - ServerFileTableViewCell
-
 class ServerFileTableViewCell: UITableViewCell {
     
     @IBOutlet weak var fileNameLabel: UILabel!

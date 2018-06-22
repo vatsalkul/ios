@@ -33,7 +33,13 @@ internal protocol FilesView : BaseView {
 internal class FilesPresenter: BasePresenter {
     
     weak private var view: FilesView?
-    lazy private var offlineFiles : [String: OfflineFile] = self.loadOfflineFiles()
+    private var offlineFiles : [String: OfflineFile]?
+    
+    var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>? {
+        didSet {
+            executeSearch()
+        }
+    }
     
     init(_ view: FilesView) {
         self.view = view
@@ -135,12 +141,14 @@ internal class FilesPresenter: BasePresenter {
                                       size: serverFile.size!,
                                       mtime: serverFile.mtime!,
                                       fileUri: ServerApi.shared!.getFileUri(serverFile).absoluteString,
-                                      localPath: serverFile.getPath(),
+                                      localPath: serverFile.getPath().replacingOccurrences(of: "/", with: "-"),
                                       progress: 1,
                                       state: OfflineFileState.downloading,
                                       context: stack.context)
+        try? stack.saveContext()
         
         DownloadService.shared.startDownload(offlineFile)
+        loadOfflineFiles()
     }
     
     private func downloadAndOpenFile(at fileIndex: Int ,_ serverFile: ServerFile, mimeType: MimeType) {
@@ -185,28 +193,37 @@ internal class FilesPresenter: BasePresenter {
         return images
     }
     
-    private func loadOfflineFiles() ->  [String : OfflineFile] {
+    func loadOfflineFiles() {
         
+        debugPrint("loadOfflineFiles was called")
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "OfflineFile")
-        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "downloadDate", ascending: false)]
+
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let stack = delegate.stack
         
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
-        let offlineFiles : [OfflineFile] = fetchedResultsController.fetchedObjects as! [OfflineFile]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                  managedObjectContext: stack.context,
+                                                                  sectionNameKeyPath: nil, cacheName: nil)
+        if let files = fetchedResultsController?.fetchedObjects as! [OfflineFile]? {
      
-        var dictionary = [String : OfflineFile]()
+            var dictionary = [String : OfflineFile]()
             
-        for file in offlineFiles {
-            dictionary[file.name!] = file
+            for file in files {
+                dictionary[file.name!] = file
+            }
+            debugPrint("Offline Files \(dictionary)")
+            
+            self.offlineFiles = dictionary
+        } else {
+            debugPrint("Detched Objects returned was nil")
+            self.offlineFiles = [:]
         }
-        
-        return dictionary
     }
     
     func checkFileOfflineState(_ file: ServerFile) -> OfflineFileState {
         
-        if let offlineFile = offlineFiles[file.name!] {
+        if let offlineFile = offlineFiles![file.name!] {
             
             if file.mtime! != offlineFile.mtime! || file.size! != offlineFile.size {
                 return .outdated
@@ -215,6 +232,16 @@ internal class FilesPresenter: BasePresenter {
             return offlineFile.stateEnum
         } else {
             return .none
+        }
+    }
+    
+    private func executeSearch() {
+        if let fc = fetchedResultsController {
+            do {
+                try fc.performFetch()
+            } catch let e as NSError {
+                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+            }
         }
     }
 }

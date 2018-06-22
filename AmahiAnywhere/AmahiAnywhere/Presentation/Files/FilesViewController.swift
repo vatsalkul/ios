@@ -41,12 +41,18 @@ class FilesViewController: BaseUIViewController {
         self.refreshControl?.addTarget(self, action: #selector(handleRefresh), for: UIControlEvents.valueChanged)
         filesTableView.addSubview(refreshControl)
         
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        filesTableView.addGestureRecognizer(longPress)
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        filesTableView.addGestureRecognizer(longPressGesture)
         
         self.navigationItem.title = getTitle()
         
         presenter.getFiles(share, directory: directory)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        presenter.loadOfflineFiles()
     }
     
     @objc func handleLongPress(sender: UILongPressGestureRecognizer){
@@ -81,7 +87,10 @@ class FilesViewController: BaseUIViewController {
                 let cancel = self.creatAlertAction(StringLiterals.CANCEL, style: .cancel, clicked: nil)!
                 actions.append(cancel)
                 
-                self.createActionSheet(title: "", message: "", ltrActions: actions, preferredActionPosition: 0)
+                self.createActionSheet(title: "",
+                                       message: StringLiterals.CHOOSE_ONE,
+                                       ltrActions: actions,
+                                       preferredActionPosition: 0)
             }
         }
     }

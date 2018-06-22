@@ -30,6 +30,7 @@ struct StringLiterals {
     static let AVAILABLE_OFFLINE =              "Available Offline"
     static let REMOVE_OFFLINE =                 "Make unavailable Offline"
     static let STOP_DOWNLOAD =                  "Stop Download"
+    static let CHOOSE_ONE =                     "Choose One"
 
     static let CURRENT_SIZE =                   "Current size: %@"
     static let AUTO_CONNECTION_LAN =            "Autodetect (currently LAN)"
