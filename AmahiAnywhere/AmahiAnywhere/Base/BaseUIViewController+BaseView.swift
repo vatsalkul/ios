@@ -75,6 +75,10 @@ extension UIViewController {
             connectionMode = ConnectionMode.local
         }
         
+        if LocalStorage.shared.userConnectionPreference != .auto {
+            connectionMode = LocalStorage.shared.userConnectionPreference
+        }
+        
         let color = connectionMode == .remote ? UIColor.remoteIndicatorBrown : UIColor.localIndicatorBlack
         self.navigationController?.navigationBar.backgroundColor = color
     }
@@ -116,6 +120,25 @@ extension UIViewController {
         alertController.addAction(defaultAction);
        
                 
+        self.present(alertController, animated: true, completion: nil);
+    }
+    
+    func createActionSheet(title: String! = "", message: String! = StringLiterals.CHOOSE_ONE, ltrActions: [UIAlertAction]! = [] ,
+                           preferredActionPosition: Int = 0 ){
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet);
+        
+        if(ltrActions.count == 0){
+            let defaultAction = UIAlertAction(title: StringLiterals.OK, style: .default, handler: nil);
+            alertController.addAction(defaultAction);
+        } else {
+            for (index , x) in ltrActions.enumerated() {
+                alertController.addAction(x as UIAlertAction);
+                if index == preferredActionPosition {
+                    alertController.preferredAction = x as UIAlertAction
+                }
+            }
+        }
+        
         self.present(alertController, animated: true, completion: nil);
     }
     

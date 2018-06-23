@@ -37,6 +37,9 @@ public class Network {
         
         Alamofire.request(url, method: method, parameters: parameters, headers: getFinalHeaders(headers))
             .responseObject {(response: DataResponse<T>) in
+                
+                debugPrint("Request to \(url!) returned with STATUS CODE \(response.response?.statusCode)") // <<<<<<<<<<<<<
+                
                 switch response.result {
                     case .success:
                         if let data = response.result.value {
@@ -79,7 +82,8 @@ public class Network {
         // Create destination URL
         let destination: DownloadRequest.DownloadFileDestination = { _, _ in
             
-            let tempDirectoryURL = FileManager.default.createFolderInTemp(folderName: "cache")
+            let tempDirectoryURL = FileManager.default.findOrCreateFolder(in: FileManager.default.temporaryDirectory,
+                                                                    folderName: "cache")
 
             let destinationFileUrl = tempDirectoryURL?.appendingPathComponent(file.getPath())
             
