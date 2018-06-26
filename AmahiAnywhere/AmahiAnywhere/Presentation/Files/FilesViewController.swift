@@ -96,7 +96,6 @@ class FilesViewController: BaseUIViewController {
                                        ltrActions: actions,
                                        preferredActionPosition: 0,
                                        sender: filesTableView.cellForRow(at: indexPath))
-                                       preferredActionPosition: 0)
             }
         }
     }
