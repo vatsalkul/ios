@@ -32,6 +32,7 @@ class OfflineFilesPresenter: BasePresenter {
     }
     
     func handleOfflineFile(fileIndex: Int, files: [OfflineFile], from sender : UIView?) {
+
         let file = files[fileIndex]
         let fileManager = FileManager.default
         

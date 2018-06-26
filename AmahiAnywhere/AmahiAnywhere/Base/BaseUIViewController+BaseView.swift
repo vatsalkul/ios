@@ -9,8 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-
-// Mark - Generic View Setup 
+// Mark - Generic View Setup
 extension BaseUIViewController: BaseView {
     
     func showLoading() {

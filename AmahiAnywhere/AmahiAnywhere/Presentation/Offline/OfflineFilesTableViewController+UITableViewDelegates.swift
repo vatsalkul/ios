@@ -18,8 +18,8 @@ extension OfflineFilesTableViewController {
         cell.fileNameLabel?.text = offlineFile.name
         cell.fileSizeLabel?.text = offlineFile.getFileSize()
         cell.downloadDateLabel?.text = offlineFile.downloadDate?.asString
-        cell.progressView.setProgress(offlineFile.progress, animated: true)
-        
+        cell.progressView.setProgress(offlineFile.progress, animated: true)        
+      
         if offlineFile.progress == 1 {
             cell.progressView.isHidden = true
         }
