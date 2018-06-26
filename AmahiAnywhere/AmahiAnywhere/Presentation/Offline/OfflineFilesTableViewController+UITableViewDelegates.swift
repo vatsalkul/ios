@@ -18,7 +18,7 @@ extension OfflineFilesTableViewController {
         cell.fileNameLabel?.text = offlineFile.name
         cell.fileSizeLabel?.text = offlineFile.getFileSize()
         cell.downloadDateLabel?.text = offlineFile.downloadDate?.asString
-        cell.progressView.setProgress(offlineFile.progress, animated: false)
+        cell.progressView.setProgress(offlineFile.progress, animated: true)
         
         if offlineFile.progress == 1 {
             cell.progressView.isHidden = true
@@ -53,7 +53,7 @@ extension OfflineFilesTableViewController {
         let share = UITableViewRowAction(style: .normal, title: StringLiterals.SHARE) { (action, indexPath) in
             
             guard let url = FileManager.default.localFilePathInDownloads(for: offlineFile) else { return }
-            self.shareFile(at: url)
+            self.shareFile(at: url, from: tableView.cellForRow(at: indexPath))
         }
         share.backgroundColor = UIColor.blue
         
@@ -68,7 +68,7 @@ extension OfflineFilesTableViewController {
         
         let offlineFiles : [OfflineFile] = fetchedResultsController?.fetchedObjects as! [OfflineFile]
         if offlineFiles[indexPath.row].stateEnum == .downloaded {
-            presenter.handleOfflineFile(fileIndex: indexPath.row, files: offlineFiles)
+            presenter.handleOfflineFile(fileIndex: indexPath.row, files: offlineFiles, from: tableView.cellForRow(at: indexPath))
         }
         tableView.deselectRow(at: indexPath, animated: false)
     }

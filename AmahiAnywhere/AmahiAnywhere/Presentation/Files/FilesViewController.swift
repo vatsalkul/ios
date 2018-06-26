@@ -62,6 +62,10 @@ class FilesViewController: BaseUIViewController {
                 
                 let file = self.filteredFiles[indexPath.row]
                 
+                if file.isDirectory() {
+                    return
+                }
+                
                 let download = self.creatAlertAction(StringLiterals.DOWNLOAD, style: .default) { (action) in
                     let file = self.filteredFiles[indexPath.row]
                     self.presenter.makeFileAvailableOffline(file)
@@ -90,7 +94,8 @@ class FilesViewController: BaseUIViewController {
                 self.createActionSheet(title: "",
                                        message: StringLiterals.CHOOSE_ONE,
                                        ltrActions: actions,
-                                       preferredActionPosition: 0)
+                                       preferredActionPosition: 0,
+                                       sender: filesTableView.cellForRow(at: indexPath))
             }
         }
     }

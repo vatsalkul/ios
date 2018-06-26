@@ -66,12 +66,12 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
                 
                 let open = self.creatAlertAction(StringLiterals.OPEN, style: .default) { (action) in
                     let offlineFiles : [OfflineFile] = self.fetchedResultsController?.fetchedObjects as! [OfflineFile]
-                    self.presenter.handleOfflineFile(fileIndex: indexPath.row, files: offlineFiles)
+                    self.presenter.handleOfflineFile(fileIndex: indexPath.row, files: offlineFiles, from: self.tableView.cellForRow(at: indexPath))
                 }!
                 
                 let share = self.creatAlertAction(StringLiterals.SHARE, style: .default) { (action) in
                     guard let url = FileManager.default.localFilePathInDownloads(for: offlineFile) else { return }
-                    self.shareFile(at: url)
+                    self.shareFile(at: url, from: self.tableView.cellForRow(at: indexPath))
                 }!
                 
                 let stop = self.creatAlertAction(StringLiterals.STOP_DOWNLOAD, style: .default) { (action) in
@@ -101,7 +101,8 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
                 self.createActionSheet(title: "",
                                        message: StringLiterals.CHOOSE_ONE,
                                        ltrActions: actions,
-                                       preferredActionPosition: 0)
+                                       preferredActionPosition: 0,
+                                       sender: tableView.cellForRow(at: indexPath))
             }
         }
     }

@@ -36,11 +36,14 @@ extension FilesViewController: FilesView {
         progressView?.setProgress(progress, animated: true)
     }
     
-    func shareFile(at url: URL) {
+    func shareFile(at url: URL, from sender : UIView? ) {
         let linkToShare = [url]
         
         let activityController = UIActivityViewController(activityItems: linkToShare, applicationActivities: nil)
-        
+        if let popoverController = activityController.popoverPresentationController, let sender = sender {
+            popoverController.sourceView = sender
+            popoverController.sourceRect = sender.bounds
+        }
         self.present(activityController, animated: true, completion: nil)
     }
     
