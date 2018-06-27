@@ -93,7 +93,7 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
         }
     }
     
-    private func delete(file offline: OfflineFile) {
+    private func delete(file offlineFile: OfflineFile) {
         // Delete file in downloads directory
         let fileManager = FileManager.default
         do {
