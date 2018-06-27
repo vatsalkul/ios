@@ -136,12 +136,17 @@ internal class FilesPresenter: BasePresenter {
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let stack = delegate.stack
         
+        var path = serverFile.getPath().replacingOccurrences(of: "/", with: "-")
+        if path.first == "-" {
+            path.removeFirst()
+        }
+        
         let offlineFile = OfflineFile(name: serverFile.getNameOnly(),
                                       mime: serverFile.mime_type!,
                                       size: serverFile.size!,
                                       mtime: serverFile.mtime!,
                                       fileUri: ServerApi.shared!.getFileUri(serverFile).absoluteString,
-                                      localPath: serverFile.getPath().replacingOccurrences(of: "/", with: "-"),
+                                      localPath: path,
                                       progress: 1,
                                       state: OfflineFileState.downloading,
                                       context: stack.context)

@@ -51,7 +51,7 @@ class OfflineFilesPresenter: BasePresenter {
         case MimeType.image:
             // prepare ImageViewer
             let controller = LightboxController(images: prepareImageArray(files), startIndex: fileIndex)
-            controller.dynamicBackground = true
+            controller.dynamicBackground = false
             self.view?.present(controller)
             break
             
@@ -79,6 +79,8 @@ class OfflineFilesPresenter: BasePresenter {
         for file in files {
             if (Mimes.shared.match(file.mime!) == MimeType.image) {
                 let path = FileManager.default.localFilePathInDownloads(for: file)!
+//                let path = file.remoteFileURL()
+                debugPrint("Path to image file is \(path)")
                 images.append(LightboxImage(imageURL: path, text: file.name!))
             }
         }
