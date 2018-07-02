@@ -56,6 +56,7 @@ class FilesViewController: BaseUIViewController {
     }
     
     @objc func handleLongPress(sender: UILongPressGestureRecognizer){
+        
         if sender.state == UIGestureRecognizerState.began {
             let touchPoint = sender.location(in: filesTableView)
             if let indexPath = filesTableView.indexPathForRow(at: touchPoint) {

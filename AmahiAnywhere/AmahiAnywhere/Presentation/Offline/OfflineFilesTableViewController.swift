@@ -38,7 +38,13 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
     }
     
-    @objc func handleLongPress(sender: UILongPressGestureRecognizer){
+    @objc func handleLongPress(sender: UILongPressGestureRecognizer) {
+        
+        if tableView.isEditing {
+            debugPrint("TableView is editing, can't show action sheet")
+            return
+        }
+        
         if sender.state == UIGestureRecognizerState.began {
             let touchPoint = sender.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: touchPoint) {

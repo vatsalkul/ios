@@ -28,6 +28,10 @@ extension OfflineFilesTableViewController {
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
+        if tableView.isEditing {
+            return []
+        }
+        
         let offlineFile = self.fetchedResultsController!.object(at: indexPath) as! OfflineFile
         
         let delete = UITableViewRowAction(style: .destructive, title: StringLiterals.DELETE) { (action, indexPath) in
@@ -56,12 +60,12 @@ extension OfflineFilesTableViewController {
             self.shareFile(at: url, from: tableView.cellForRow(at: indexPath))
         }
         share.backgroundColor = UIColor.blue
-        
         return [share, delete]
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
+        debugPrint("Tableview canEditRowAt was called")
+        return !tableView.isEditing
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
