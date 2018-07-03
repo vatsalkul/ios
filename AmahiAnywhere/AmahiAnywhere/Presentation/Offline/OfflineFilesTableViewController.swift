@@ -18,7 +18,6 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         debugPrint("Active Downloads \(DownloadService.shared.activeDownloads)")
         
         presenter = OfflineFilesPresenter(self)
@@ -41,7 +40,6 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
     @objc func handleLongPress(sender: UILongPressGestureRecognizer) {
         
         if tableView.isEditing {
-            debugPrint("TableView is editing, can't show action sheet")
             return
         }
         

@@ -18,19 +18,15 @@ extension OfflineFilesTableViewController {
         cell.fileNameLabel?.text = offlineFile.name
         cell.fileSizeLabel?.text = offlineFile.getFileSize()
         cell.downloadDateLabel?.text = offlineFile.downloadDate?.asString
-        cell.progressView.setProgress(offlineFile.progress, animated: true)        
+        cell.progressView.setProgress(offlineFile.progress, animated: false)        
       
-        if offlineFile.progress == 1 {
+        if offlineFile.stateEnum != .downloading {
             cell.progressView.isHidden = true
         }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        
-        if tableView.isEditing {
-            return []
-        }
         
         let offlineFile = self.fetchedResultsController!.object(at: indexPath) as! OfflineFile
         
@@ -47,7 +43,7 @@ extension OfflineFilesTableViewController {
             let delegate = UIApplication.shared.delegate as! AppDelegate
             let stack = delegate.stack
             
-            // Delete Offline File from core date and persist new changes immediately
+            // Delete Offline File from CoreData and persist new changes immediately
             stack.context.delete(offlineFile)
             try? stack.saveContext()
             debugPrint("File was deleted from Downloads")
@@ -64,8 +60,13 @@ extension OfflineFilesTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        debugPrint("Tableview canEditRowAt was called")
-        return !tableView.isEditing
+        
+        for file in fetchedResultsController!.fetchedObjects! {
+            if (file as! OfflineFile).stateEnum == .downloading {
+                return false
+            }
+        }
+        return true
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

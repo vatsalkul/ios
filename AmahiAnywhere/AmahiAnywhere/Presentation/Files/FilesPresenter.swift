@@ -200,13 +200,12 @@ internal class FilesPresenter: BasePresenter {
     
     func loadOfflineFiles() {
         
-        debugPrint("loadOfflineFiles was called")
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "OfflineFile")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "downloadDate", ascending: false)]
 
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let stack = delegate.stack
-        
+                
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                   managedObjectContext: stack.context,
                                                                   sectionNameKeyPath: nil, cacheName: nil)

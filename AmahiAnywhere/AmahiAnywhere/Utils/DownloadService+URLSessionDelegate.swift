@@ -43,6 +43,13 @@ extension DownloadService: URLSessionDownloadDelegate {
             try fileManager.moveItem(at: location, to: destinationURL)
             download.offlineFile.stateEnum = .downloaded
             
+            DispatchQueue.main.async {
+                let delegate = UIApplication.shared.delegate as! AppDelegate
+                let stack = delegate.stack
+                try? stack.context.save()
+                stack.context.refresh(download.offlineFile, mergeChanges: true)
+            }
+            
         } catch let error {
             debugPrint("Could not move file to disk: \(error.localizedDescription)")
         }
@@ -59,6 +66,13 @@ extension DownloadService: URLSessionDownloadDelegate {
         let progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
         download.progress = progress
         download.offlineFile.progress = progress
+        
+        DispatchQueue.main.async {
+            let delegate = UIApplication.shared.delegate as! AppDelegate
+            let stack = delegate.stack
+            try? stack.context.save()
+            stack.context.refresh(download.offlineFile, mergeChanges: true)
+        }
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
