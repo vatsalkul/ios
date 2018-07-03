@@ -56,11 +56,16 @@ class FilesViewController: BaseUIViewController {
     }
     
     @objc func handleLongPress(sender: UILongPressGestureRecognizer){
+        
         if sender.state == UIGestureRecognizerState.began {
             let touchPoint = sender.location(in: filesTableView)
             if let indexPath = filesTableView.indexPathForRow(at: touchPoint) {
                 
                 let file = self.filteredFiles[indexPath.row]
+                
+                if file.isDirectory() {
+                    return
+                }
                 
                 let download = self.creatAlertAction(StringLiterals.DOWNLOAD, style: .default) { (action) in
                     let file = self.filteredFiles[indexPath.row]
@@ -90,7 +95,8 @@ class FilesViewController: BaseUIViewController {
                 self.createActionSheet(title: "",
                                        message: StringLiterals.CHOOSE_ONE,
                                        ltrActions: actions,
-                                       preferredActionPosition: 0)
+                                       preferredActionPosition: 0,
+                                       sender: filesTableView.cellForRow(at: indexPath))
             }
         }
     }

@@ -23,8 +23,8 @@ internal protocol FilesView : BaseView {
     
     func webViewOpenContent(at url: URL, mimeType: MimeType)
     
-    func shareFile(at url: URL)
-    
+    func shareFile(at url: URL, from sender : UIView?)
+
     func updateDownloadProgress(for row: Int, downloadJustStarted: Bool, progress: Float)
     
     func dismissProgressIndicator(at url: URL, completion: @escaping () -> Void)
@@ -92,7 +92,7 @@ internal class FilesPresenter: BasePresenter {
         }
     }
     
-    func handleFileOpening(fileIndex: Int, files: [ServerFile]) {
+    func handleFileOpening(fileIndex: Int, files: [ServerFile], from sender : UIView?) {
         let file = files[fileIndex]
         
         let type = Mimes.shared.match(file.mime_type!)
@@ -116,12 +116,12 @@ internal class FilesPresenter: BasePresenter {
             if FileManager.default.fileExistsInCache(file){
                 let path = FileManager.default.localPathInCache(for: file)
                 if type == MimeType.sharedFile {
-                    self.view?.shareFile(at: path)
+                    self.view?.shareFile(at: path, from: sender)
                 } else {
                     self.view?.webViewOpenContent(at: path, mimeType: type)
                 }
             } else {
-                downloadAndOpenFile(at: fileIndex, file, mimeType: type)
+                downloadAndOpenFile(at: fileIndex, file, mimeType: type, from: sender)
             }
             break
             
@@ -136,12 +136,17 @@ internal class FilesPresenter: BasePresenter {
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let stack = delegate.stack
         
+        var path = serverFile.getPath().replacingOccurrences(of: "/", with: "-")
+        if path.first == "-" {
+            path.removeFirst()
+        }
+        
         let offlineFile = OfflineFile(name: serverFile.getNameOnly(),
                                       mime: serverFile.mime_type!,
                                       size: serverFile.size!,
                                       mtime: serverFile.mtime!,
                                       fileUri: ServerApi.shared!.getFileUri(serverFile).absoluteString,
-                                      localPath: serverFile.getPath().replacingOccurrences(of: "/", with: "-"),
+                                      localPath: path,
                                       progress: 1,
                                       state: OfflineFileState.downloading,
                                       context: stack.context)
@@ -151,7 +156,7 @@ internal class FilesPresenter: BasePresenter {
         loadOfflineFiles()
     }
     
-    private func downloadAndOpenFile(at fileIndex: Int ,_ serverFile: ServerFile, mimeType: MimeType) {
+    private func downloadAndOpenFile(at fileIndex: Int ,_ serverFile: ServerFile, mimeType: MimeType, from sender : UIView?) {
         
         self.view?.updateDownloadProgress(for: fileIndex, downloadJustStarted: true, progress: 0.0)
         
@@ -175,7 +180,7 @@ internal class FilesPresenter: BasePresenter {
             self.view?.dismissProgressIndicator(at: filePath, completion: {
                 
                 if mimeType == MimeType.sharedFile {
-                    self.view?.shareFile(at: filePath)
+                    self.view?.shareFile(at: filePath, from: sender)
                 } else {
                     self.view?.webViewOpenContent(at: filePath, mimeType: mimeType)
                 }
@@ -195,13 +200,12 @@ internal class FilesPresenter: BasePresenter {
     
     func loadOfflineFiles() {
         
-        debugPrint("loadOfflineFiles was called")
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "OfflineFile")
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "downloadDate", ascending: false)]
 
         let delegate = UIApplication.shared.delegate as! AppDelegate
         let stack = delegate.stack
-        
+                
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                   managedObjectContext: stack.context,
                                                                   sectionNameKeyPath: nil, cacheName: nil)

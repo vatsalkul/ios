@@ -18,9 +18,9 @@ extension OfflineFilesTableViewController {
         cell.fileNameLabel?.text = offlineFile.name
         cell.fileSizeLabel?.text = offlineFile.getFileSize()
         cell.downloadDateLabel?.text = offlineFile.downloadDate?.asString
-        cell.progressView.setProgress(offlineFile.progress, animated: false)
-        
-        if offlineFile.progress == 1 {
+        cell.progressView.setProgress(offlineFile.progress, animated: false)        
+      
+        if offlineFile.stateEnum != .downloading {
             cell.progressView.isHidden = true
         }
         return cell
@@ -43,7 +43,7 @@ extension OfflineFilesTableViewController {
             let delegate = UIApplication.shared.delegate as! AppDelegate
             let stack = delegate.stack
             
-            // Delete Offline File from core date and persist new changes immediately
+            // Delete Offline File from CoreData and persist new changes immediately
             stack.context.delete(offlineFile)
             try? stack.saveContext()
             debugPrint("File was deleted from Downloads")
@@ -53,14 +53,19 @@ extension OfflineFilesTableViewController {
         let share = UITableViewRowAction(style: .normal, title: StringLiterals.SHARE) { (action, indexPath) in
             
             guard let url = FileManager.default.localFilePathInDownloads(for: offlineFile) else { return }
-            self.shareFile(at: url)
+            self.shareFile(at: url, from: tableView.cellForRow(at: indexPath))
         }
         share.backgroundColor = UIColor.blue
-        
         return [share, delete]
     }
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        
+        for file in fetchedResultsController!.fetchedObjects! {
+            if (file as! OfflineFile).stateEnum == .downloading {
+                return false
+            }
+        }
         return true
     }
     
@@ -68,7 +73,7 @@ extension OfflineFilesTableViewController {
         
         let offlineFiles : [OfflineFile] = fetchedResultsController?.fetchedObjects as! [OfflineFile]
         if offlineFiles[indexPath.row].stateEnum == .downloaded {
-            presenter.handleOfflineFile(fileIndex: indexPath.row, files: offlineFiles)
+            presenter.handleOfflineFile(fileIndex: indexPath.row, files: offlineFiles, from: tableView.cellForRow(at: indexPath))
         }
         tableView.deselectRow(at: indexPath, animated: false)
     }

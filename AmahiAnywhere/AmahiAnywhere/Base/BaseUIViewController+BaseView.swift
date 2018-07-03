@@ -9,8 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-
-// Mark - Generic View Setup 
+// Mark - Generic View Setup
 extension BaseUIViewController: BaseView {
     
     func showLoading() {
@@ -124,7 +123,7 @@ extension UIViewController {
     }
     
     func createActionSheet(title: String! = "", message: String! = StringLiterals.CHOOSE_ONE, ltrActions: [UIAlertAction]! = [] ,
-                           preferredActionPosition: Int = 0 ){
+                           preferredActionPosition: Int = 0, sender: UIView? = nil ){
         let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.actionSheet);
         
         if(ltrActions.count == 0){
@@ -137,6 +136,11 @@ extension UIViewController {
                     alertController.preferredAction = x as UIAlertAction
                 }
             }
+        }
+        
+        if let popoverController = alertController.popoverPresentationController, let sender = sender {
+            popoverController.sourceView = sender
+            popoverController.sourceRect = sender.bounds
         }
         
         self.present(alertController, animated: true, completion: nil);

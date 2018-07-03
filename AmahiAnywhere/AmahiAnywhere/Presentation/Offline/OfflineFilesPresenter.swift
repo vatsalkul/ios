@@ -16,7 +16,7 @@ protocol OfflineFilesView : BaseView {
     
     func webViewOpenContent(at url: URL, mimeType: MimeType)
     
-    func shareFile(at url: URL)
+    func shareFile(at url: URL, from sender : UIView?)
 }
 
 class OfflineFilesPresenter: BasePresenter {
@@ -31,7 +31,8 @@ class OfflineFilesPresenter: BasePresenter {
         self.view = nil
     }
     
-    func handleOfflineFile(fileIndex: Int, files: [OfflineFile]) {
+    func handleOfflineFile(fileIndex: Int, files: [OfflineFile], from sender : UIView?) {
+
         let file = files[fileIndex]
         let fileManager = FileManager.default
         
@@ -50,7 +51,7 @@ class OfflineFilesPresenter: BasePresenter {
         case MimeType.image:
             // prepare ImageViewer
             let controller = LightboxController(images: prepareImageArray(files), startIndex: fileIndex)
-            controller.dynamicBackground = true
+            controller.dynamicBackground = false
             self.view?.present(controller)
             break
             
@@ -61,7 +62,7 @@ class OfflineFilesPresenter: BasePresenter {
             
         case MimeType.code, MimeType.presentation, MimeType.sharedFile, MimeType.document, MimeType.spreadsheet:
             if type == MimeType.sharedFile {
-                self.view?.shareFile(at: url)
+                self.view?.shareFile(at: url, from: sender)
             } else {
                 self.view?.webViewOpenContent(at: url, mimeType: type)
             }
@@ -78,6 +79,8 @@ class OfflineFilesPresenter: BasePresenter {
         for file in files {
             if (Mimes.shared.match(file.mime!) == MimeType.image) {
                 let path = FileManager.default.localFilePathInDownloads(for: file)!
+//                let path = file.remoteFileURL()
+                debugPrint("Path to image file is \(path)")
                 images.append(LightboxImage(imageURL: path, text: file.name!))
             }
         }
