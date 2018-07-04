@@ -25,6 +25,12 @@ extension FilesViewController : UITableViewDelegate, UITableViewDataSource {
             cell.fileNameLabel?.text = serverFile.name
             cell.fileSizeLabel?.text = serverFile.getFileSize()
             cell.lastModifiedLabel?.text = serverFile.getLastModifiedDate()
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(userClickMenu(sender:)))
+            tap.cancelsTouchesInView = true
+            cell.menuImageView.isUserInteractionEnabled = true
+            cell.menuImageView.addGestureRecognizer(tap)
+            
             return cell
         }
     }

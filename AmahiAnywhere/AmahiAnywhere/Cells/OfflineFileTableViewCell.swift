@@ -14,4 +14,5 @@ class OfflineFileTableViewCell: UITableViewCell {
     @IBOutlet weak var fileSizeLabel: UILabel!
     @IBOutlet weak var downloadDateLabel: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var menuImageView: UIImageView!
 }

@@ -55,50 +55,53 @@ class FilesViewController: BaseUIViewController {
         presenter.loadOfflineFiles()
     }
     
-    @objc func handleLongPress(sender: UILongPressGestureRecognizer){
+    @objc func handleLongPress(sender: UIGestureRecognizer){
         
-        if sender.state == UIGestureRecognizerState.began {
-            let touchPoint = sender.location(in: filesTableView)
-            if let indexPath = filesTableView.indexPathForRow(at: touchPoint) {
-                
-                let file = self.filteredFiles[indexPath.row]
-                
-                if file.isDirectory() {
-                    return
-                }
-                
-                let download = self.creatAlertAction(StringLiterals.DOWNLOAD, style: .default) { (action) in
-                    let file = self.filteredFiles[indexPath.row]
-                    self.presenter.makeFileAvailableOffline(file)
-                }!
-                
-                let removeOffline = self.creatAlertAction(StringLiterals.REMOVE_OFFLINE, style: .default) { (action) in
-                }!
-                
-                let stop = self.creatAlertAction(StringLiterals.STOP_DOWNLOAD, style: .default) { (action) in
-                }!
-                
-                var actions = [UIAlertAction]()
-                
-                let state = presenter.checkFileOfflineState(file)
-                if state == .none {
-                    actions.append(download)
-                } else if state == .downloaded {
-                    actions.append(removeOffline)
-                } else if state == .downloading {
-                    actions.append(stop)
-                }
-                
-                let cancel = self.creatAlertAction(StringLiterals.CANCEL, style: .cancel, clicked: nil)!
-                actions.append(cancel)
-                
-                self.createActionSheet(title: "",
-                                       message: StringLiterals.CHOOSE_ONE,
-                                       ltrActions: actions,
-                                       preferredActionPosition: 0,
-                                       sender: filesTableView.cellForRow(at: indexPath))
+        let touchPoint = sender.location(in: filesTableView)
+        if let indexPath = filesTableView.indexPathForRow(at: touchPoint) {
+            
+            let file = self.filteredFiles[indexPath.row]
+            
+            if file.isDirectory() {
+                return
             }
+            
+            let download = self.creatAlertAction(StringLiterals.DOWNLOAD, style: .default) { (action) in
+                let file = self.filteredFiles[indexPath.row]
+                self.presenter.makeFileAvailableOffline(file)
+            }!
+            
+            let removeOffline = self.creatAlertAction(StringLiterals.REMOVE_OFFLINE, style: .default) { (action) in
+            }!
+            
+            let stop = self.creatAlertAction(StringLiterals.STOP_DOWNLOAD, style: .default) { (action) in
+            }!
+            
+            var actions = [UIAlertAction]()
+            
+            let state = presenter.checkFileOfflineState(file)
+            if state == .none {
+                actions.append(download)
+            } else if state == .downloaded {
+                actions.append(removeOffline)
+            } else if state == .downloading {
+                actions.append(stop)
+            }
+            
+            let cancel = self.creatAlertAction(StringLiterals.CANCEL, style: .cancel, clicked: nil)!
+            actions.append(cancel)
+            
+            self.createActionSheet(title: "",
+                                   message: StringLiterals.CHOOSE_ONE,
+                                   ltrActions: actions,
+                                   preferredActionPosition: 0,
+                                   sender: filesTableView.cellForRow(at: indexPath))
         }
+    }
+    
+    
+    @objc func userClickMenu(sender: UIGestureRecognizer) {
+        handleLongPress(sender: sender)
     }
     
     @objc func handleRefresh(sender: UIRefreshControl) {
