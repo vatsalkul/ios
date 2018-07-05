@@ -121,13 +121,32 @@ internal class FilesPresenter: BasePresenter {
                     self.view?.webViewOpenContent(at: path, mimeType: type)
                 }
             } else {
-                downloadAndOpenFile(at: fileIndex, file, mimeType: type, from: sender)
+                downloadFile(at: fileIndex, file, mimeType: type, from: sender, completion: { filePath in
+                    if type == MimeType.sharedFile {
+                        self.view?.shareFile(at: filePath, from: sender)
+                    } else {
+                        self.view?.webViewOpenContent(at: filePath, mimeType: type)
+                    }
+                })
             }
             break
             
         default:
             // TODO: show list of apps that can open the file
             return
+        }
+    }
+    
+    public func shareFile(_ file: ServerFile, fileIndex: Int,from sender : UIView?) {
+        let type = Mimes.shared.match(file.mime_type!)
+
+        if FileManager.default.fileExistsInCache(file){
+            let path = FileManager.default.localPathInCache(for: file)
+            self.view?.shareFile(at: path, from: sender)
+        } else {
+            downloadFile(at: fileIndex, file, mimeType: type, from: sender, completion: { filePath in
+                self.view?.shareFile(at: filePath, from: sender)
+            })
         }
     }
     
@@ -156,7 +175,11 @@ internal class FilesPresenter: BasePresenter {
         loadOfflineFiles()
     }
     
-    private func downloadAndOpenFile(at fileIndex: Int ,_ serverFile: ServerFile, mimeType: MimeType, from sender : UIView?) {
+    private func downloadFile(at fileIndex: Int ,
+                      _ serverFile: ServerFile,
+                      mimeType: MimeType,
+                      from sender : UIView?,
+                      completion: @escaping (_ filePath: URL) -> Void) {
         
         self.view?.updateDownloadProgress(for: fileIndex, downloadJustStarted: true, progress: 0.0)
         
@@ -178,12 +201,7 @@ internal class FilesPresenter: BasePresenter {
             let filePath = FileManager.default.localPathInCache(for: serverFile)
             
             self.view?.dismissProgressIndicator(at: filePath, completion: {
-                
-                if mimeType == MimeType.sharedFile {
-                    self.view?.shareFile(at: filePath, from: sender)
-                } else {
-                    self.view?.webViewOpenContent(at: filePath, mimeType: mimeType)
-                }
+                completion(filePath)
             })
         })
     }
@@ -244,7 +262,7 @@ internal class FilesPresenter: BasePresenter {
             do {
                 try fc.performFetch()
             } catch let e as NSError {
-                print("Error while trying to perform a search: \n\(e)\n\(fetchedResultsController)")
+                print("Error while trying to perform a search: \n\(e)\n\(String(describing: fetchedResultsController))")
             }
         }
     }

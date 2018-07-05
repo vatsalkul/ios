@@ -52,7 +52,7 @@ class WebViewController : UIViewController {
     
     @objc func userClickShare() {
         
-        let linkToShare = [url]
+        let linkToShare : [Any] = [url]
         
         let activityController = UIActivityViewController(activityItems: linkToShare, applicationActivities: nil)
         if let popoverController = activityController.popoverPresentationController {

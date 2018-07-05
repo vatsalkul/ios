@@ -70,6 +70,12 @@ class FilesViewController: BaseUIViewController {
                 let file = self.filteredFiles[indexPath.row]
                 self.presenter.makeFileAvailableOffline(file)
             }!
+            let state = presenter.checkFileOfflineState(file)
+
+            let share = self.creatAlertAction(StringLiterals.SHARE, style: .default) { (action) in
+                self.presenter.shareFile(file, fileIndex: indexPath.row,
+                                         from: self.filesTableView.cellForRow(at: indexPath))
+            }!
             
             let removeOffline = self.creatAlertAction(StringLiterals.REMOVE_OFFLINE, style: .default) { (action) in
             }!
@@ -77,9 +83,9 @@ class FilesViewController: BaseUIViewController {
             let stop = self.creatAlertAction(StringLiterals.STOP_DOWNLOAD, style: .default) { (action) in
             }!
             
-            var actions = [UIAlertAction]()
-            
-            let state = presenter.checkFileOfflineState(file)
+            var actions = [UIAlertAction]()            
+            actions.append(share)
+
             if state == .none {
                 actions.append(download)
             } else if state == .downloaded {
@@ -98,7 +104,6 @@ class FilesViewController: BaseUIViewController {
                                    sender: filesTableView.cellForRow(at: indexPath))
         }
     }
-    
     
     @objc func userClickMenu(sender: UIGestureRecognizer) {
         handleLongPress(sender: sender)
