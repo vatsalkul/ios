@@ -18,7 +18,12 @@ extension OfflineFilesTableViewController {
         cell.fileNameLabel?.text = offlineFile.name
         cell.fileSizeLabel?.text = offlineFile.getFileSize()
         cell.downloadDateLabel?.text = offlineFile.downloadDate?.asString
-        cell.progressView.setProgress(offlineFile.progress, animated: false)        
+        cell.progressView.setProgress(offlineFile.progress, animated: false)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(userClickMenu(sender:)))
+        tap.cancelsTouchesInView = true
+        cell.menuImageView.isUserInteractionEnabled = true
+        cell.menuImageView.addGestureRecognizer(tap)
       
         if offlineFile.stateEnum != .downloading {
             cell.progressView.isHidden = true

@@ -13,4 +13,5 @@ class ServerFileTableViewCell: UITableViewCell {
     @IBOutlet weak var fileNameLabel: UILabel!
     @IBOutlet weak var fileSizeLabel: UILabel!
     @IBOutlet weak var lastModifiedLabel: UILabel!
+    @IBOutlet weak var menuImageView: UIImageView!
 }

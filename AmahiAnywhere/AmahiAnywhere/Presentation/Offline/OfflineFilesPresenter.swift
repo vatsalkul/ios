@@ -79,9 +79,8 @@ class OfflineFilesPresenter: BasePresenter {
         for file in files {
             if (Mimes.shared.match(file.mime!) == MimeType.image) {
                 let path = FileManager.default.localFilePathInDownloads(for: file)!
-//                let path = file.remoteFileURL()
-                debugPrint("Path to image file is \(path)")
-                images.append(LightboxImage(imageURL: path, text: file.name!))
+                let data = NSData(contentsOf: path)
+                images.append(LightboxImage(image: UIImage(data: data! as Data)!, text: file.name!))
             }
         }
         return images
