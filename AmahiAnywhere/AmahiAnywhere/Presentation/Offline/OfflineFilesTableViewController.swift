@@ -38,10 +38,11 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
     }
     
     @objc func handleLongPress(sender: UIGestureRecognizer) {
-        
+    
         if tableView.isEditing {
             return
         }
+        
         let touchPoint = sender.location(in: tableView)
         if let indexPath = tableView.indexPathForRow(at: touchPoint) {
 
