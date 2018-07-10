@@ -14,5 +14,12 @@ class BaseUITableViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         updateNavigationBarBackground()
+        addActiveDownloadObserver()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
     }
 }

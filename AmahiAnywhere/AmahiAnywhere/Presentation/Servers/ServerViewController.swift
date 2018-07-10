@@ -22,6 +22,12 @@ class ServerViewController: BaseUITableViewController {
         self.refreshControl?.addTarget(self, action: #selector(handleRefresh), for: UIControlEvents.valueChanged)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        showDownloadsIconIfOfflineFileExists()
+    }
+    
     @objc func handleRefresh(sender: UIRefreshControl) {
         updateNavigationBarBackground()
         presenter.fetchServers()
@@ -30,7 +36,6 @@ class ServerViewController: BaseUITableViewController {
     @IBAction func settingButtonPressed(_ sender: Any) {
         performSegue(withIdentifier: SegueIdentfiers.SETTING, sender: nil)
     }
-   
 }
 
 // Mark - TableView Delegates Implementations
@@ -85,7 +90,6 @@ extension ServerViewController {
             navigationController?.pushViewController(offlineFileVc, animated: true)
         }
     }
-
 }
 
 // Mark - Server view implementations

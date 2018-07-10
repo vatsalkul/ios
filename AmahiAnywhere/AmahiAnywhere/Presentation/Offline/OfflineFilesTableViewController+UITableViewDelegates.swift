@@ -28,6 +28,8 @@ extension OfflineFilesTableViewController {
         if offlineFile.stateEnum != .downloading {
             cell.progressView.isHidden = true
         }
+        
+        debugPrint("Offline File State at index: \(indexPath.row) \(offlineFile.stateEnum) with progress \(offlineFile.progress)")
         return cell
     }
     

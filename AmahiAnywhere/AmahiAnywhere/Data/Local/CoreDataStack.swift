@@ -83,6 +83,16 @@ internal extension CoreDataStack  {
         try coordinator.destroyPersistentStore(at: dbURL, ofType:NSSQLiteStoreType , options: nil)
         try addStoreCoordinator(NSSQLiteStoreType, configuration: nil, storeURL: dbURL, options: nil)
     }
+    
+    var isDownloadsEmpty : Bool {
+        do {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "OfflineFile")
+            let count  = try context.count(for: fetchRequest)
+            return count == 0 ? true : false
+        } catch{
+            return true
+        }
+    }
 }
 
 // MARK: - CoreDataStack (Save Data)
