@@ -82,6 +82,75 @@ extension UIViewController {
         self.navigationController?.navigationBar.backgroundColor = color
     }
     
+    func showDownloadsIconIfOfflineFileExists() {
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        
+        if !stack.isDownloadsEmpty {
+            let rightButton = UIBarButtonItem(image: UIImage(named: "icon_cell_phone"),
+                                              style: .plain, target: self,
+                                              action: #selector(userClickedDownloadsIcon))
+            
+            if DownloadService.shared.activeDownloads.isEmpty {
+                rightButton.tintColor = UIColor.white
+            } else {
+                rightButton.tintColor = UIColor.softYellow
+            }
+            navigationItem.rightBarButtonItem = rightButton
+        } else {
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
+    @objc func userClickedDownloadsIcon() {
+        let offlineFileVc = viewController(viewControllerClass: OfflineFilesTableViewController.self,
+                                           from: StoryBoardIdentifiers.MAIN)
+        navigationController?.pushViewController(offlineFileVc, animated: true)
+    }
+    
+    @objc func updateDownloadsIconOnDownloadStarted() {
+        
+        debugPrint("Active Downloads count \(DownloadService.shared.activeDownloads.count)")
+        
+        if navigationItem.rightBarButtonItem == nil {
+            let rightButton = UIBarButtonItem(image: UIImage(named: "icon_cell_phone"),
+                                              style: .plain, target: self,
+                                              action: #selector(userClickedDownloadsIcon))
+            navigationItem.rightBarButtonItem = rightButton
+        }
+        
+        if DownloadService.shared.activeDownloads.isEmpty {
+            navigationItem.rightBarButtonItem?.tintColor = UIColor.white
+        } else {
+            navigationItem.rightBarButtonItem?.tintColor = UIColor.softYellow
+        }
+    }
+    
+    @objc func updateDownloadsIconOnDownloadCompleted() {
+        debugPrint("Active Downloads count \(DownloadService.shared.activeDownloads.count)")
+        
+        if DownloadService.shared.activeDownloads.isEmpty {
+            navigationItem.rightBarButtonItem?.tintColor = UIColor.white
+        } else {
+            navigationItem.rightBarButtonItem?.tintColor = UIColor.softYellow
+        }
+    }
+    
+    func addActiveDownloadObserver() {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadsIconOnDownloadStarted),
+                                               name: .DownloadStarted, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadsIconOnDownloadCompleted),
+                                               name: .DownloadCompletedSuccessfully, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadsIconOnDownloadCompleted),
+                                               name: .DownloadCompletedWithError, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadsIconOnDownloadCompleted),
+                                               name: .DownloadCancelled, object: nil)
+    }
+    
     class var storyboardID : String {
         return "\(self)"
     }

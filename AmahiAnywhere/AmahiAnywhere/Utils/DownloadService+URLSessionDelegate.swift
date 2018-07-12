@@ -28,8 +28,8 @@ extension DownloadService: URLSessionDownloadDelegate {
     
     // Stores downloaded file
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        debugPrint("Download Has Completed")
-    
+        debugPrint("Download Has Completed for url \(downloadTask.originalRequest?.url!)")
+
         guard let sourceURL = downloadTask.originalRequest?.url else { return }
         guard let download = DownloadService.shared.activeDownloads[sourceURL] else { return }
         DownloadService.shared.activeDownloads[sourceURL] = nil
@@ -41,13 +41,14 @@ extension DownloadService: URLSessionDownloadDelegate {
         try? fileManager.removeItem(at: destinationURL)
         do {
             try fileManager.moveItem(at: location, to: destinationURL)
-            download.offlineFile.stateEnum = .downloaded
             
             DispatchQueue.main.async {
                 let delegate = UIApplication.shared.delegate as! AppDelegate
                 let stack = delegate.stack
+                download.offlineFile.stateEnum = .downloaded
                 try? stack.context.save()
-                stack.context.refresh(download.offlineFile, mergeChanges: true)
+                debugPrint("Download Has Saved for url \(downloadTask.originalRequest?.url!)")
+                NotificationCenter.default.post(name: .DownloadCompletedSuccessfully, object: nil, userInfo: [:])
             }
             
         } catch let error {
@@ -65,17 +66,19 @@ extension DownloadService: URLSessionDownloadDelegate {
 
         let progress = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
         download.progress = progress
-        download.offlineFile.progress = progress
         
         DispatchQueue.main.async {
             let delegate = UIApplication.shared.delegate as! AppDelegate
             let stack = delegate.stack
+            download.offlineFile.progress = progress
             try? stack.context.save()
-            stack.context.refresh(download.offlineFile, mergeChanges: true)
         }
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         debugPrint("Download completed: \(task), error: \(error?.localizedDescription ?? "")")
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .DownloadCompletedWithError, object: nil, userInfo: [:])
+        }
     }
 }

@@ -25,6 +25,12 @@ class SharesTableViewController: BaseUITableViewController {
         presenter.loadServerRoute()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        showDownloadsIconIfOfflineFileExists()
+    }
+    
     @objc func handleRefresh(sender: UIRefreshControl) {
         updateNavigationBarBackground()
         presenter.getShares()

@@ -63,7 +63,6 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
             }!
             
             let stop = self.creatAlertAction(StringLiterals.STOP_DOWNLOAD, style: .default) { (action) in
-                offlineFile.stateEnum = .none
                 DownloadService.shared.cancelDownload(offlineFile)
                 self.delete(file: offlineFile)
             }!
