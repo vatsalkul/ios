@@ -49,9 +49,10 @@ class FilesViewController: BaseUIViewController {
         presenter.getFiles(share, directory: directory)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
+        showDownloadsIconIfOfflineFileExists()
         presenter.loadOfflineFiles()
     }
     

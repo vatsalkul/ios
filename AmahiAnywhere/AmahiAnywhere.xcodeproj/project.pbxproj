@@ -39,6 +39,7 @@
 		C83C639D203992460089B9D8 /* LoginPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C639C203992460089B9D8 /* LoginPresenter.swift */; };
 		C83C639F2039B16C0089B9D8 /* ServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83C639E2039B16C0089B9D8 /* ServerViewController.swift */; };
 		C8490D1520C847F90052D636 /* VideoPlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C8490D1420C847F90052D636 /* VideoPlayer.storyboard */; };
+		C84BBA5E20F37EF20030536F /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84BBA5D20F37EF20030536F /* Notification.swift */; };
 		C866E5552042D02A0083A606 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C866E5542042D02A0083A606 /* VideoPlayerViewController.swift */; };
 		C86CA91020D3937A00C8EDCA /* OfflineFilesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86CA90F20D3937A00C8EDCA /* OfflineFilesPresenter.swift */; };
 		C86CA91320D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C86CA91120D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodeld */; };
@@ -109,6 +110,7 @@
 		C83C639C203992460089B9D8 /* LoginPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenter.swift; sourceTree = "<group>"; };
 		C83C639E2039B16C0089B9D8 /* ServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerViewController.swift; sourceTree = "<group>"; };
 		C8490D1420C847F90052D636 /* VideoPlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VideoPlayer.storyboard; sourceTree = "<group>"; };
+		C84BBA5D20F37EF20030536F /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		C866E5532042373D0083A606 /* AmahiAnywhere-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AmahiAnywhere-Bridging-Header.h"; sourceTree = "<group>"; };
 		C866E5542042D02A0083A606 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		C86CA90F20D3937A00C8EDCA /* OfflineFilesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineFilesPresenter.swift; sourceTree = "<group>"; };
@@ -207,6 +209,7 @@
 			children = (
 				C86CA91620D3C76C00C8EDCA /* Models */,
 				C83C63812038D5B30089B9D8 /* LocalStorage.swift */,
+				C86CA91420D3C65400C8EDCA /* CoreDataStack.swift */,
 				C83C63822038D5B30089B9D8 /* PersistenceIdentifiers.swift */,
 				C83C63832038D5B30089B9D8 /* StringLiterals.swift */,
 			);
@@ -289,7 +292,6 @@
 				C8DA5B2E20D7A1CA00F5A527 /* OfflineFileSort.swift */,
 				C86CA92720D3D26300C8EDCA /* OfflineFile+CoreDataClass.swift */,
 				C86CA92820D3D26300C8EDCA /* OfflineFile+CoreDataProperties.swift */,
-				C86CA91420D3C65400C8EDCA /* CoreDataStack.swift */,
 				C80F3F4920D47422000901B4 /* OfflineFileState.swift */,
 				C8DA5B1720D5D7EA00F5A527 /* Download.swift */,
 			);
@@ -305,6 +307,7 @@
 				C88E5A7520B66B44006518B6 /* Date.swift */,
 				C8DEBFAC20BB1AEF00B09AED /* Alamofire.swift */,
 				C8DA5B3420D8740F00F5A527 /* String.swift */,
+				C84BBA5D20F37EF20030536F /* Notification.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -580,6 +583,7 @@
 				C86CA91320D3A84A00C8EDCA /* OfflineFilesModel.xcdatamodeld in Sources */,
 				4605963F204E24DF004FA066 /* ServerPresenter.swift in Sources */,
 				46098D02204FDBEE00752EB6 /* ApiEndPoints.swift in Sources */,
+				C84BBA5E20F37EF20030536F /* Notification.swift in Sources */,
 				C83C63922038D5B30089B9D8 /* AmahiApi.swift in Sources */,
 				46CB896B204FB0FC0031151F /* SharesPresenter.swift in Sources */,
 				C8DA5B2F20D7A1CA00F5A527 /* OfflineFileSort.swift in Sources */,
@@ -759,7 +763,10 @@
 				DEVELOPMENT_TEAM = 44WM7BTB59;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = AmahiAnywhere/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.amahi.AmahiAnywhere-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AmahiAnywhere/AmahiAnywhere-Bridging-Header.h";
@@ -777,7 +784,10 @@
 				DEVELOPMENT_TEAM = 44WM7BTB59;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = AmahiAnywhere/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.amahi.AmahiAnywhere-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "AmahiAnywhere/AmahiAnywhere-Bridging-Header.h";

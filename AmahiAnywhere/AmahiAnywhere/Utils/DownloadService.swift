@@ -36,6 +36,7 @@ class DownloadService : NSObject {
         download.isDownloading = true
         
         activeDownloads[url] = download
+        NotificationCenter.default.post(name: .DownloadStarted, object: nil, userInfo: [:])
     }
     
     func pauseDownload(_ offlineFile: OfflineFile) {
@@ -56,8 +57,9 @@ class DownloadService : NSObject {
 
         if let download = activeDownloads[url] {
             download.task?.cancel()
-            activeDownloads[url] = nil
+            activeDownloads.removeValue(forKey: url)
         }
+        NotificationCenter.default.post(name: .DownloadCancelled, object: nil, userInfo: [:])
     }
     
     func resumeDownload(_ offlineFile: OfflineFile) {
