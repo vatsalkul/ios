@@ -67,19 +67,21 @@ extension BaseUITableViewController: BaseView {
 
 extension UIViewController {
     
-    func updateNavigationBarBackground() {
-        var connectionMode = ConnectionMode.remote
-        
-        if ConnectionModeManager.shared.isLocalInUse() {
-            connectionMode = ConnectionMode.local
-        }
-        
+    @objc func updateNavigationBarBackgroundAccordingToCurrentConnectionMode() {
         if LocalStorage.shared.userConnectionPreference != .auto {
-            connectionMode = LocalStorage.shared.userConnectionPreference
+            let connectionMode = LocalStorage.shared.userConnectionPreference
+            let color = connectionMode == .remote ? UIColor.remoteIndicatorBrown : UIColor.localIndicatorBlack
+            self.navigationController?.navigationBar.backgroundColor = color
+
         }
-        
-        let color = connectionMode == .remote ? UIColor.remoteIndicatorBrown : UIColor.localIndicatorBlack
-        self.navigationController?.navigationBar.backgroundColor = color
+    }
+    
+    @objc func updateNavigationBarBackgroundWhenLanTestPassed() {
+        self.navigationController?.navigationBar.backgroundColor = UIColor.localIndicatorBlack
+    }
+    
+    @objc func updateNavigationBarBackgroundWhenLanTestFailed() {
+        self.navigationController?.navigationBar.backgroundColor = UIColor.remoteIndicatorBrown
     }
     
     func showDownloadsIconIfOfflineFileExists() {
@@ -120,9 +122,11 @@ extension UIViewController {
         }
         
         if DownloadService.shared.activeDownloads.isEmpty {
-            navigationItem.rightBarButtonItem?.tintColor = UIColor.white
+            navigationController?.viewControllers.forEach({ (controller) in                    controller.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
+            })
         } else {
-            navigationItem.rightBarButtonItem?.tintColor = UIColor.softYellow
+            navigationController?.viewControllers.forEach({ (controller) in                    controller.navigationItem.rightBarButtonItem?.tintColor = UIColor.softYellow
+            })
         }
     }
     
@@ -136,7 +140,7 @@ extension UIViewController {
         }
     }
     
-    func addActiveDownloadObserver() {
+    func addActiveDownloadObservers() {
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadsIconOnDownloadStarted),
                                                name: .DownloadStarted, object: nil)
@@ -149,6 +153,15 @@ extension UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(updateDownloadsIconOnDownloadCompleted),
                                                name: .DownloadCancelled, object: nil)
+    }
+    
+    func addLanTestObservers() {
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateNavigationBarBackgroundWhenLanTestPassed),
+                                               name: .LanTestPassed, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(updateNavigationBarBackgroundWhenLanTestFailed),
+                                               name: .LanTestFailed, object: nil)
     }
     
     class var storyboardID : String {

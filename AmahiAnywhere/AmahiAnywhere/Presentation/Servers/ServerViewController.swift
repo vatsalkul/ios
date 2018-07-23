@@ -17,6 +17,7 @@ class ServerViewController: BaseUITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+                
         presenter = ServerPresenter(self)
         presenter.fetchServers()
         self.refreshControl?.addTarget(self, action: #selector(handleRefresh), for: UIControlEvents.valueChanged)
@@ -29,7 +30,6 @@ class ServerViewController: BaseUITableViewController {
     }
     
     @objc func handleRefresh(sender: UIRefreshControl) {
-        updateNavigationBarBackground()
         presenter.fetchServers()
     }
 
@@ -81,9 +81,9 @@ extension ServerViewController {
         if indexPath.section == 0 {
             ServerApi.initialize(server: servers[indexPath.row])
             
-            let sharedVc = viewController(viewControllerClass: SharesTableViewController.self,
+            let sharesVc = viewController(viewControllerClass: SharesTableViewController.self,
                                           from: StoryBoardIdentifiers.MAIN)
-            navigationController?.pushViewController(sharedVc, animated: true)
+            navigationController?.pushViewController(sharesVc, animated: true)
         } else {
             let offlineFileVc = viewController(viewControllerClass: OfflineFilesTableViewController.self,
                                           from: StoryBoardIdentifiers.MAIN)

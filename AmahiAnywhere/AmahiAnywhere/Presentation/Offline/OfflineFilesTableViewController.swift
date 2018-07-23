@@ -49,6 +49,9 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
             let offlineFile = self.fetchedResultsController!.object(at: indexPath) as! OfflineFile
 
             let delete = self.creatAlertAction(StringLiterals.DELETE, style: .default) { (action) in
+                if offlineFile.stateEnum != .downloading {
+                    DownloadService.shared.cancelDownload(offlineFile)
+                }
                 self.delete(file: offlineFile)
             }!
             
@@ -76,7 +79,7 @@ class OfflineFilesTableViewController : CoreDataTableViewController {
                 }
                 actions.append(delete)
                 actions.append(share)
-            } else if state == .stopped {
+            } else if state == .completedWithError {
                 actions.append(delete)
             } else if state == .downloading {
                 actions.append(stop)
