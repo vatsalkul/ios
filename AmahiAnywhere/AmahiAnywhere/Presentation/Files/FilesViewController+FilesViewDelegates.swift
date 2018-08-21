@@ -70,48 +70,68 @@ extension FilesViewController: FilesView {
         player = AVQueuePlayer(items: items)
         player.actionAtItemEnd = .advance
         avPlayerVC.player = player
-        
-        for item in items {
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(FilesViewController.nextAudio(notification:)),
-                                                   name: .AVPlayerItemDidPlayToEndTime, object: item)
-        }
-        
+
         present(avPlayerVC, animated: true) {
+
+            for item in items {
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(self.nextAudio),
+                                                       name: .AVPlayerItemDidPlayToEndTime,
+                                                       object: item)
+            }
+
+            // display the details of the first item
+            self.setNowPlayingInfo(item: items[0])
+
             self.player.play()
         }
     }
     
-    func setNowPlayingInfo() {
+    func setNowPlayingInfo(item: AVPlayerItem) {
+
+        //print("display_details")
+
         // Get Now Playing information and set it appropriately
         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
         var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
-        
-        let title = "title"
-        let album = "album"
-        let artworkData = Data()
-        let image = UIImage(data: artworkData) ?? UIImage()
-        let artwork = MPMediaItemArtwork(boundsSize: image.size, requestHandler: {  (_) -> UIImage in
-            return image
-        })
-        
-        nowPlayingInfo[MPMediaItemPropertyTitle] = title
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
-        nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
-        
+
+        let metadataList = item.asset.metadata
+
+        for item in metadataList {
+
+            guard let key = item.commonKey, let value = item.value else {
+                continue
+            }
+
+            switch key {
+            case .commonKeyTitle : nowPlayingInfo[MPMediaItemPropertyTitle] = (value as? String)!
+            case .commonKeyArtist: nowPlayingInfo[MPMediaItemPropertyArtist] = (value as? String)!
+            case .commonKeyAlbumName: nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = (value as? String)!
+            case .commonKeyArtwork:
+                let image = UIImage(data: value as! Data)
+                let mediaImageArtwork = MPMediaItemArtwork(boundsSize: (image?.size)!, requestHandler: { (size) -> UIImage in
+                    return image!
+                })
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = mediaImageArtwork
+            default:
+                continue
+            }
+        }
+
+        nowPlayingInfo[MPMediaItemPropertyMediaType] = MPNowPlayingInfoMediaType.audio.rawValue
+
         nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
-    
+
     @objc func nextAudio(notification: Notification) {
-        AmahiLogger.log("nextAudio was called")
+
+        // print("next_audio")
+
+        // AmahiLogger.log("nextAudio was called")
         guard player != nil else { return }
-        AmahiLogger.log("AVPlayerItemDidPlayToEndTime notif info  \(notification.userInfo)")
-        //        if let currentItem = player.currentItem {
-        if let currentItem = notification.userInfo!["object"] as? AVPlayerItem {
-            currentItem.seek(to: kCMTimeZero)
-            self.player.advanceToNextItem()
-            self.player.insert(currentItem, after: nil)
-        }
+
+        let currentItem = player.currentItem!
+        self.setNowPlayingInfo(item: currentItem)
     }
     
     override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
@@ -123,6 +143,7 @@ extension FilesViewController: FilesView {
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        // print("observe value")
         // Make sure the this KVO callback was intended for this view controller.
         let ctx = context
         guard ctx == &playerKVOContext else {
@@ -130,23 +151,22 @@ extension FilesViewController: FilesView {
             return
         }
         
-        if keyPath == #keyPath(FilesViewController.player.rate) {
-            let newRate = (change?[NSKeyValueChangeKey.newKey] as! NSNumber).doubleValue
-            guard player != nil else { return }
-
-            AmahiLogger.log("CURRENT RATE IS \(newRate)")
+        if keyPath == #keyPath(AVPlayerItem.status) {
+            let status: AVPlayerItemStatus
             
-            if newRate == 0.0 {
-                
-                if let currentItem = player.currentItem {
-                    guard currentItem.currentTime() == currentItem.duration else { return }
-                    AmahiLogger.log("ENTERED LAST BLOCK")
-                    currentItem.seek(to: kCMTimeZero)
-                    self.player.advanceToNextItem()
-                    self.player.insert(currentItem, after: nil)
-                    
-                    self.player.play()
-                }
+            // Get the status change from the change dictionary
+            if let statusNumber = change?[.newKey] as? NSNumber {
+                status = AVPlayerItemStatus(rawValue: statusNumber.intValue)!
+            } else {
+                status = .unknown
+            }
+
+            // Switch over the status
+            if status == .readyToPlay {
+                // Player item is ready to play.
+                print("item ready to play!")
+            } else {
+                print("item status is \(status): \(change?[.newKey] as? NSNumber)")
             }
         }
     }
