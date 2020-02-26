@@ -13,4 +13,9 @@ use_frameworks!
     pod 'MobileVLCKit'
     pod 'Lightbox'
     pod 'ReachabilitySwift'
+    pod 'SDWebImage'
+    pod 'SwipeCellKit'
+    pod 'google-cast-sdk'
+    pod 'Floaty'
+    
 end
